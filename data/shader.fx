@@ -1,6 +1,7 @@
 //
 // custom_corona0.fx
 //
+float3 floats[100];
 
 //-----------------------------------------------------------------------------
 // Effect Settings
@@ -118,7 +119,6 @@ float4 PixelShaderFunction(PSInput PS) : COLOR0
     color.rgb = pow( color.rgb * 1.2, 1.5 );
     color *= PS.Diffuse*2;
     color.a *= PS.DistFactor;
-    color.a *= saturate( 1 );
     return saturate( color );
 }
 

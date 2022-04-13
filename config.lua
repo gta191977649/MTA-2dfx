@@ -1,0 +1,4 @@
+CONFIG = {
+    DRAW_DIST = 400,
+    NEAR_CLIP_DIST = 0.2,
+}

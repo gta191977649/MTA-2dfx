@@ -1,3 +1,4 @@
+CoronaBuffer = {}
 local file = fileOpen("data/objects.lua")
 local data = fileRead(file, fileGetSize(file))
 fileClose(file)
@@ -19,28 +20,25 @@ for d,c in pairs(data2dfx) do
 			for i=1,#c do
 				local corona = c[i]
                 local x, y, z = getPositionFromElementOffset(v, corona[5], corona[6], corona[7])
-                createCorona(x, y, z, corona[8]*5, tocolor(corona[1], corona[2], corona[3],0), corona[9])
+                local fx = createMarker(x, y, z,"corona", corona[8]*3, corona[1], corona[2], corona[3],0)
+                CoronaBuffer[fx] = {x,y,z,corona[8]*3,corona[1], corona[2], corona[3]}
             end
         end
     end
 end
 
---[[
-addEventHandler("onClientPreRender", root, function()
+
+addEventHandler("onClientRender", root, function()
     local renderTime = getTickCount()
-	local vehicles = getElementsByType("vehicle")
-	for i=1,#vehicles do
-		local v = vehicles[i]
-		local model = getElementModel(v)
-        if data2dfx[model] then
-            local matrix = getElementMatrix(v)
-			for i=1,#data2dfx[model] do
-				local corona = data2dfx[model][i]
-                local x, y, z = getPositionFromElementOffset(matrix, corona[5], corona[6], corona[7])
-                drawCorona(x, y, z, corona[8]*2, tocolor(corona[1],corona[2],corona[3],0), 2)--c[9])
-            end
+    local x,y,z = getElementPosition(localPlayer)
+	local coronas = getElementsWithinRange(x,y,z,900,"marker")
+
+    for i=1,#coronas do 
+        local fx = CoronaBuffer[coronas[i]]
+        if fx then 
+            local x,y,z,size,r,g,b = unpack(fx)
+            drawCorona(x, y, z, 1, tocolor(r,g,b,255), 1)
         end
-	end
+    end
     print("render in",getTickCount() - renderTime,"ms")
 end)
---]]
